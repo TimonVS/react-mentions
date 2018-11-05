@@ -9,6 +9,7 @@ import CssModules from './CssModules'
 import AsyncGithubUserMentions from './AsyncGithubUserMentions'
 import Scrollable from './Scrollable'
 import SuggestionPortal from './SuggestionPortal'
+import CustomControl from './CustomControl'
 
 const users = [
   {
@@ -50,6 +51,7 @@ export default function Examples() {
         <Scrollable data={users} />
         <Advanced data={users} />
         <CssModules data={users} />
+        <CustomControl data={users} />
         <AsyncGithubUserMentions data={users} />
         <SuggestionPortal data={users} />
       </div>

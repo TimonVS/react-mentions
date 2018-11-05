@@ -89,6 +89,8 @@ const propTypes = {
   onChange: PropTypes.func,
   suggestionsPortalHost: PropTypes.any,
 
+  renderControl: PropTypes.func,
+
   children: PropTypes.oneOfType([
     PropTypes.element,
     PropTypes.arrayOf(PropTypes.element),
@@ -140,7 +142,7 @@ class MentionsInput extends React.Component {
     )
   }
 
-  getInputProps = isTextarea => {
+  getInputProps = ({ refKey = 'ref' }) => {
     let { readOnly, disabled, style } = this.props
 
     // pass all props that we don't use through to the input control
@@ -149,6 +151,8 @@ class MentionsInput extends React.Component {
     return {
       ...props,
       ...style('input'),
+
+      [refKey]: el => (this.inputRef = el),
 
       value: this.getPlainText(),
 
@@ -166,15 +170,22 @@ class MentionsInput extends React.Component {
   }
 
   renderControl = () => {
-    let { singleLine, style } = this.props
+    let { renderControl, singleLine, style } = this.props
     let inputProps = this.getInputProps(!singleLine)
+
+    const input = renderControl
+      ? renderControl({
+          getInputProps: this.getInputProps,
+          getStyle: () => style('input'),
+        })
+      : singleLine
+        ? this.renderInput(inputProps)
+        : this.renderTextarea(inputProps)
 
     return (
       <div {...style('control')}>
         {this.renderHighlighter(inputProps.style)}
-        {singleLine
-          ? this.renderInput(inputProps)
-          : this.renderTextarea(inputProps)}
+        {input}
       </div>
     )
   }
